@@ -42,15 +42,14 @@ while ($linha = fgets($arquivo)){ // Enquanto o ponteiro no arquivo de entrada n
             $input = 'E) '.fgets($arquivo);
             $lista[] = $input;
             break;
-        case ("RESPOSTA CORRETA\r\n"): // Se a linha lida for "Resposta Correta", significa que a úiltima alternativa inserida na lista é a resposta da questão
+        case ("RESPOSTA CORRETA\r\n"): // Se a linha lida for "Resposta Correta", significa que a última alternativa inserida na lista é a resposta da questão
             $resposta = end($lista);
             $resposta = $resposta[0];
         default:
             break;
     }
-$lista[] = 'ANSWER: '.$resposta."\r\n";  // Insere a resposta ao final da lista
 }
-
+$lista[] = 'ANSWER: '.$resposta."\r\n";  // Insere a resposta ao final da lista
 print_r($lista);
 
 /*
