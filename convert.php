@@ -9,17 +9,29 @@
 /*
 * Arquivos de entrada e saída são carregados
 */
-$arquivo = fopen('arquivo.txt', 'r+');
+$arquivo = fopen('entrada.txt', 'r+');
 $saida = fopen('saida.txt','a+');
 /*
 * Fim
 */
 
 $lista = []; // Lista com a pergunta, alternativas e resposta
-$linha = fgets($arquivo); // Recupera a primeira linha do arquivo de entrada (a pergunta)
-$lista[] = $linha; // Insere a pergunta na lista
+$fimPergunta = false; // A linha atual ainda é da pergunta?
+$pergunta = []; // Lista para montar a pergunta a partir das linhas
+$numeroPergunta = ["1)\r\n", "2)\r\n", "3)\r\n", "4)\r\n", "5)\r\n", "\r\n"];
 
 while ($linha = fgets($arquivo)){ // Enquanto o ponteiro no arquivo de entrada não chegar ao fim
+
+    if(!$fimPergunta){ // Verifica se a pergunta já acabou
+        if($linha == "a)\r\n"){ // Se a linha atual for a), significa que acabaram as linhas da pergunta
+            $lista[] = implode(' ',$pergunta)."\r\n"; // A pergunta formatada é inserida na lista final
+            $fimPergunta = true;
+        }else{
+            if (!in_array($linha,$numeroPergunta)) { // Verifica se a linha atual está na lista, se estiver, significa que a linha atual não faz parte da pergunta final
+                $pergunta[] = trim(preg_replace('/\s\s+/', ' ', $linha)); // Se a linha atual não estiver na lsita de controle, essa linha é adicionada na lista que irá se tornar a pergunta final
+            }
+        }
+    }
 
     switch($linha) { // Verifica qual linha está sendo lida, e se ela é relevante para o processo
         case ("a)\r\n"):
@@ -48,6 +60,7 @@ while ($linha = fgets($arquivo)){ // Enquanto o ponteiro no arquivo de entrada n
         default:
             break;
     }
+    
 }
 $lista[] = 'ANSWER: '.$resposta."\r\n";  // Insere a resposta ao final da lista
 print_r($lista);
